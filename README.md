@@ -4,8 +4,6 @@ This repository contains the source data, computational input files, and experim
 **"Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys"**  
 *by Kirill Osintsev, Yuce Zhu, Vishnu Raghuraman, and Xizhang Chen.*
 
-Submitted to *Nature Communications*.
-
 ---
 
 ## 📌 Project Overview
@@ -14,15 +12,15 @@ This study investigates how solid-state cooling rates (achieved via Jominy end-q
 The repository provides all necessary data to reproduce the analytical modeling (NIMM), first-principles electronic structure calculations (MuST), atomistic simulations (LAMMPS), and experimental validations (electrical resistivity, micro-tensile tests, HRTEM, and XRD).
 
 ### Investigated Alloys (at.%)
-*   **Fe60Ni20Cr20** (Low Ni/Cr concentration, weak SRO driving force)
-*   **Fe34Ni33Cr33** (Moderate Ni/Cr concentration)
-*   **Fe20Ni50Cr30** (High Ni/Cr concentration, strong SRO driving force $\rightarrow$ transition to modulated structure)
+*   **Fe60Ni20Cr20** (Low Ni/Cr concentration, highest relative SRO change due to thermal gradients)
+*   **Fe34Ni33Cr33** (Moderate Ni/Cr concentration, moderate relative SRO change due to thermal gradients)
+*   **Fe20Ni50Cr30** (High Ni/Cr concentration, lowest relative SRO change due to thermal gradients but transformation of SRO $\rightarrow$ to modulated structure)
 
 ---
 
 ## 📂 Repository Structure
 
-Based on the *Nature Communications* Reproducibility Guidelines, all input files, raw data, and processing scripts are organized as follows:
+All input files, raw data, and processing scripts are organized as follows:
 
 ### `01_Experimental_Data/`
 Contains raw and processed experimental data:
