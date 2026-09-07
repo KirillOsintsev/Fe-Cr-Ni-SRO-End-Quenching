@@ -77,7 +77,7 @@ To ensure compliance with computational reproducibility standards, the following
 
 If you use the data, models, or scripts provided in this repository, please cite our manuscript:
 
-> Osintsev, K., Zhu, Y., Raghuraman, V., & Chen, X.-Z. (2024). *Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys*. Nature Communications (Under Review).
+> Osintsev, K., Zhu, Y., Raghuraman, V., & Chen, X.-Z. (2026). *Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys*. (Under Review).
 
 ---
 
