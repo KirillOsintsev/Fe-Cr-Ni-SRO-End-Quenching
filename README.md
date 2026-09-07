@@ -45,7 +45,7 @@ Contains input files and outputs for first-principles **Multiple Scattering Theo
 *   **DOS_Data/**: Calculated Density of States (DOS) at the Fermi level and Kubo-Greenwood residual resistivity data.
 
 ### `04_Media/`
-*   **End_Quench_Videos/**: High-speed video documentation of the water-jet quenching process, illustrating the film and nucleate boiling regimes.
+*   **End_Quench_Videos/**: Video documentation of the water-jet quenching process.
 
 ---
 
