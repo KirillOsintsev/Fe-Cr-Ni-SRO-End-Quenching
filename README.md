@@ -26,7 +26,7 @@ All input files, raw data, and processing scripts are organized as follows:
 Contains raw and processed experimental data organized by characterization method:
 *   **Thermocouples/**: Contains `Cooling_curves.xlsx` with time-temperature data from K-type thermocouples positioned at 2.5 mm (Bottom), 45 mm (Middle), and 75 mm (Top) from the quenched end.
 *   **XRD/**: Contains raw XRD patterns (`.txt`, `.xy`) and GSAS-II project files (`.gpx`) used for Rietveld refinement, organized by alloy and region (as-cast, top, middle, bottom).
-*   **TEM/**: Contains raw `.dm3` high-resolution TEM files for the $\text{Fe}_{20}\text{Ni}_{50}\text{Cr}_{30}$ alloy (bottom and top regions) and the custom Python script (`series_of_fft_butt.py`) used to generate the averaged FFT patterns and reconstruct SRO domains via Inverse Fast Fourier Transform (IFFT).
+*   **TEM/**: Contains raw `.dm3` high-resolution TEM files for the Fe_{20}Ni_{50}Cr_{30} alloy (bottom and top regions) and the custom Python script (`average_fft_hrtem.py`) used to generate the averaged FFT patterns and reconstruct SRO domains via Inverse Fast Fourier Transform (IFFT).
 *   **Dislocation_Density/**: Contains TEM micrographs with overlaid grids used for the line-intercept method, along with the `.xlsx` files containing the quantitative defect density calculations.
 *   **Electrical_Resistivity/**: Four-point probe measurements for all three alloys across the thermal gradient.
 *   **Mechanical_Tests/**: Raw engineering stress-strain data from micro-tensile tests.
