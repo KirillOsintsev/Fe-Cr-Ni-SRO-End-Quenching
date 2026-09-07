@@ -1,64 +1,87 @@
-# Tailoring Short-Range Order in Fe-Cr-Ni Alloys by End-Quenching\
-\
-This repository contains the supplementary data, computational inputs, and experimental results for the study: \
-**"Tailoring Short-Range Order in Fe-Cr-Ni Alloys by End-Quenching"** by Osintsev et al.\
-\
-## Project Overview\
-This study investigates how different cooling rates (achieved via end-quenching) influence the formation of Short-Range Order (SRO) in complex concentrated alloys. We combine analytical modeling (NIMM), first-principles electronic structure calculations (MuST), and experimental validation (electrical resistivity, micro-tensile tests, and electron microscopy).\
-\
-### Studied Alloys (at.%)\
-*   **Fe60Ni20Cr20** (Low SRO effect)\
-*   **Fe34Ni33Cr33** (Moderate SRO effect)\
-*   **Fe20Ni50Cr30** (High SRO effect)\
-\
----\
-\
-## Repository Structure\
-\
-### `01_Experimental_Data/`\
-*   **Cooling_Rates/**: CSV files containing time-temperature data from K-type thermocouples positioned at 2.5 mm (Bottom), 45 mm (Middle), and 75 mm (Top) from the quenched end.\
-*   **Mechanical_Tests/**: Raw stress-strain data for as-cast and quenched samples used to generate Figure 7.\
-*   **Electrical_Resistivity/**: Measurements for all three alloys at different positions, including standard deviation calculations.\
-*   **XRD_EBSD/**: Raw XRD patterns (.ascii) and EBSD grain size distribution data.\
-\
-### `02_Computational_MuST/`\
-Inputs and outputs for the **MuST (Multiple Scattering Theory)** code:\
-*   **KKR-CPA/**: Inputs for the random solid solution state calculations.\
-*   **CA-CPA/**: Inputs incorporating SRO parameters obtained from NIMM.\
-*   **DOS_Data/**: Calculated Density of States (DOS) at the Fermi level ($E_F$) used to explain resistivity changes.\
-\
-### `03_Analytical_NIMM/`\
-*   **SRO_Parameters/**: Warren-Cowley parameters ($\\alpha_1$) calculated for 841 compositions in the Fe-Ni-Cr space (350 K to 1500 K).\
-*   **Strengthening_Model/**: Implementation of the solute strengthening theory used to predict the yield strength changes.\
-*   *Note: For the standalone calculator code, see: [KirillOsintsev/SRO-parameters-calculator](https://github.com/KirillOsintsev/SRO-parameters-calculator)*\
-\
-### `04_Media/`\
-*   **End_Quench_Videos/**: High-speed video documentation of the water-jet quenching process.\
-*   **Sample_Photos/**: Images of the rod specimens, the Jominy-style holder, and the machined micro-tensile specimens.\
-*   **Microscopy_HighRes/**: High-resolution SEM and EBSD maps showing single-phase stability and grain morphologies.\
-\
-### `05_Manuscript/`\
-*   Pre-print version of the article and the formatted Supplementary Information PDF.\
-\
----\
-\
-## Key Experimental Conditions\
-| Parameter | Value |\
-| :--- | :--- |\
-| Homogenization Temp | 950 \'b0C (1223 K) |\
-| Holding Time | 1 Hour |\
-| Quench Medium | Water Jet |\
-| Cooling Rates | 27.3 K/s (Bottom) to 0.6 K/s (Top) |\
-| Tensile Strain Rate | $1 \\times 10^\{-3\} \\text\{ s\}^\{-1\}$ |\
-\
-## Software Requirements\
-*   **MuST Code:** [GitHub Link](https://github.com/mstsuite/MuST) for electronic structure calculations.\
-*   **GSAS-II:** Used for Rietveld refinement of XRD patterns.\
-*   **Analysis Scripts:** Python 3.8+ (libraries: `numpy`, `pandas`, `matplotlib`).\
-\
-## Citation\
-If you use this data or the models provided, please cite our work:\
-> Osintsev, K., Yuce, Z., Raghuraman, V., & Chen, X.-Z. (2025). Tailoring Short-Range Order in Fe-Cr-Ni Alloys by End-Quenching. *Journal Name / Preprint DOI*.\
-\
-## License\
-The data in this repository is licensed under the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license. Any code is provided under the MIT License.}
+# Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys
+
+This repository contains the source data, computational input files, and experimental results for the article:  
+**"Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys"**  
+*by Kirill Osintsev, Yuce Zhu, Vishnu Raghuraman, and Xizhang Chen.*
+
+Submitted to *Nature Communications*.
+
+---
+
+## 📌 Project Overview
+This study investigates how solid-state cooling rates (achieved via Jominy end-quenching) influence the formation of Chemical Short-Range Order (SRO) in single-phase FCC complex concentrated alloys (CCAs). By generating a continuous spectrum of cooling rates within a single specimen, we spatially decouple the SRO contribution to electron scattering and macroscopic yield strength from conventional microstructural defects (grain boundaries, vacancies, and dislocations).
+
+The repository provides all necessary data to reproduce the analytical modeling (NIMM), first-principles electronic structure calculations (MuST), atomistic simulations (LAMMPS), and experimental validations (electrical resistivity, micro-tensile tests, HRTEM, and XRD).
+
+### Investigated Alloys (at.%)
+*   **Fe60Ni20Cr20** (Low Ni/Cr concentration, weak SRO driving force)
+*   **Fe34Ni33Cr33** (Moderate Ni/Cr concentration)
+*   **Fe20Ni50Cr30** (High Ni/Cr concentration, strong SRO driving force $\rightarrow$ transition to modulated structure)
+
+---
+
+## 📂 Repository Structure
+
+Based on the *Nature Communications* Reproducibility Guidelines, all input files, raw data, and processing scripts are organized as follows:
+
+### `01_Experimental_Data/`
+Contains raw and processed experimental data:
+*   **Cooling_Rates/**: CSV files with time-temperature data from K-type thermocouples positioned at 2.5 mm (Bottom), 45 mm (Middle), and 75 mm (Top) from the quenched end.
+*   **Electrical_Resistivity/**: Four-point probe measurements for all three alloys across the thermal gradient, including standard deviation calculations.
+*   **Mechanical_Tests/**: Raw engineering stress-strain data from micro-tensile tests for as-cast and end-quenched specimens.
+*   **XRD_EBSD/**: Raw X-ray diffraction patterns (.ascii) for Rietveld refinement and EBSD grain size distribution data.
+*   **TEM_HRTEM/**: High-resolution images and EDS spectra. *(Note: scripts for Fast Fourier Transform (FFT) and Inverse FFT processing to reconstruct SRO domains are included here).*
+
+### `02_Analytical_NIMM/`
+Contains data and scripts for thermodynamic SRO predictions:
+*   **SRO_Parameters/**: Calculated Warren-Cowley parameters ($\alpha^1$) and fugacity values for the Fe-Ni-Cr compositional space at temperatures ranging from 400 K to 1200 K.
+*   **Yield_Strength_Model/**: Implementation of the solute-strengthening theory (based on Varvenne-Curtin models) to predict SRO and defect contributions to macroscopic yield strength.
+*   *For the standalone automated Python calculator used in this study, please visit:* [KirillOsintsev/SRO-parameters-calculator](https://github.com/KirillOsintsev/SRO-parameters-calculator)
+
+### `03_Computational_MuST/`
+Contains input files and outputs for first-principles **Multiple Scattering Theory (MuST)** calculations to ensure full reproducibility:
+*   **KKR-CPA/**: Input files (`.inp`) for the random solid solution (RSS) baseline calculations.
+*   **CA-CPA/**: Input files incorporating the specific SRO parameters obtained from the NIMM model.
+*   **Magnetic_States/**: Total-energy minimization comparisons between Paramagnetic (PM) and Disordered Local Moment (DLM) states.
+*   **DOS_Data/**: Calculated Density of States (DOS) at the Fermi level and Kubo-Greenwood residual resistivity data.
+
+### `04_Media/`
+*   **End_Quench_Videos/**: High-speed video documentation of the water-jet quenching process, illustrating the film and nucleate boiling regimes.
+
+---
+
+## ⚙️ Key Experimental & Computational Parameters
+
+| Parameter | Value / Description |
+| :--- | :--- |
+| **Homogenization** | 1223 K for 1 hour |
+| **Quenching Medium** | Water Jet (Jominy end-quench setup) |
+| **Cooling Rates** | ~132.8–239.0 K/s (Fast-cooled Bottom) to ~0.8–1.4 K/s (Slow-cooled Top) |
+| **Tensile Strain Rate** | $1 \times 10^{-3} \text{ s}^{-1}$ (Micro-tensile tests) |
+| **Atomistic Supercells** | 500 atoms, Special Quasi-random Structures (SQS) |
+
+---
+
+## 💻 Software Requirements and Reproducibility
+
+To ensure compliance with computational reproducibility standards, the following software packages and versions were used in this study. Input files for these programs are provided in their respective directories.
+
+*   **MuST (Multiple Scattering Theory):** Ab initio electronic structure calculations and Kubo-Greenwood resistivity. [GitHub Repository](https://github.com/mstsuite/MuST).
+*   **LAMMPS:** Used for molecular dynamics energy minimization to extract equilibrium lattice parameters, elastic constants, and misfit volumes.
+*   **sqsgenerator:** Used to generate the SQS supercells for atomistic simulations.
+*   **pySSpredict:** Open-source Python toolkit used for baseline solid-solution yield strength predictions.
+*   **GSAS-II:** Used for Rietveld refinement of the XRD patterns.
+*   **Data Analysis & Plotting:** Python 3.8+ (`numpy`, `pandas`, `scipy`, `matplotlib`).
+
+---
+
+## 📖 Citation
+
+If you use the data, models, or scripts provided in this repository, please cite our manuscript:
+
+> Osintsev, K., Zhu, Y., Raghuraman, V., & Chen, X.-Z. (2024). *Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys*. Nature Communications (Under Review).
+
+---
+
+## 📄 License
+The data and custom scripts in this repository are licensed under the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license.
