@@ -1,0 +1,54 @@
+units metal
+dimension 3
+boundary p p p
+atom_style atomic
+
+log A4_4_min.log
+read_data A4_4.data
+
+mass 1 58.6934  # Ni
+mass 2 55.845   # Fe
+mass 3 51.9961  # Cr
+
+pair_style eam/alloy
+pair_coeff * * FeNiCr_bonny.eam.alloy Ni Fe Cr
+
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+timestep 0.001
+
+thermo 10
+thermo_style custom step lx ly lz pe press fmax vol
+
+# --- ЭТАПЫ МИНИМИЗАЦИИ ---
+min_style cg
+minimize 1.0e-8 1.0e-9 1000 5000
+
+# Релаксация ячейки aniso
+fix 1 all box/relax aniso 0.0 vmax 0.0001
+min_style cg
+minimize 1.0e-10 1.0e-11 1000 5000
+unfix 1
+
+# Промежуточная минимизация атомов
+min_style cg
+minimize 1.0e-10 1.0e-11 1000 5000
+
+# Релаксация ячейки iso
+fix 2 all box/relax iso 0.0 vmax 0.0001
+min_style cg
+minimize 1.0e-10 1.0e-11 1000 5000
+unfix 2
+
+variable lat_const equal "lx/5"
+variable eatom equal "pe/count(all)"
+variable teng equal "pe"
+variable natoms equal "count(all)"
+
+print "Lattice parameter (lx/5) = ${lat_const} A"
+print "Total Potential Energy (PE) = ${teng} eV"
+print "Number of atoms = ${natoms}"
+print "Cohesive energy (PE/N) = ${eatom} eV"
+print "Minimization completed."
+
+write_data A4_4_minimized.data

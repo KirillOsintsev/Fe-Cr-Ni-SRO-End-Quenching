@@ -1,0 +1,2647 @@
+LAMMPS (12 Jun 2025)
+  using 8 OpenMP thread(s) per MPI task
+include init.mod
+variable up equal 2e-06
+variable atomjiggle equal 1.0e-5
+units metal
+variable cfac equal 1.0e-4
+variable cunits string GPa
+variable etol equal 1.0e-8
+variable ftol equal 1.0e-12
+variable maxiter equal 0.0
+variable maxeval equal 50000
+variable dmax equal 1.0e-2
+boundary p p p
+read_data C0_11_minimized.data
+Reading data file ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  500 atoms
+  reading velocities ...
+  500 velocities
+  read_data CPU = 0.010 seconds
+mass 1 58.6934 # Ni
+mass 2 55.845  # Fe
+mass 3 51.9961 # Cr
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+fix 3 all box/relax aniso 0.0
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+
+- LLPR (uncertainty method): https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+- LPR (if using per-atom uncertainty): https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+- https://arxiv.org/abs/2305.19302v3
+- http://arxiv.org/abs/2503.14118
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+WARNING: Energy due to 3 extra global DOFs will be included in minimizer energies
+ (src/min.cpp:222)
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753     -0.016514569   -167.29817      156.16948      11.079145      625.45429     -598.12909      389.3387       17.373231      17.401911      17.389584      5257.348     
+Loop time of 3.822e-06 on 8 procs for 0 steps with 500 atoms
+
+1412.9% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875 4.68129414164944e-310  -3819.17529296875
+  Force two-norm initial, final = 0.75206142 0.75206142
+  Force max component initial, final = 0.54896867 0.54896867
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.822e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx0 equal ${tmp}
+variable pxx0 equal -167.298172752291
+variable tmp equal pyy
+variable pyy0 equal ${tmp}
+variable pyy0 equal 156.169484537921
+variable tmp equal pzz
+variable pzz0 equal ${tmp}
+variable pzz0 equal 11.0791445073204
+variable tmp equal pyz
+variable pyz0 equal ${tmp}
+variable pyz0 equal 389.338699619289
+variable tmp equal pxz
+variable pxz0 equal ${tmp}
+variable pxz0 equal -598.129086726536
+variable tmp equal pxy
+variable pxy0 equal ${tmp}
+variable pxy0 equal 625.454289403489
+
+variable tmp equal lx
+variable lx0 equal ${tmp}
+variable lx0 equal 17.3732308883853
+variable tmp equal ly
+variable ly0 equal ${tmp}
+variable ly0 equal 17.4019108764432
+variable tmp equal lz
+variable lz0 equal ${tmp}
+variable lz0 equal 17.3895838962708
+
+variable d1 equal -(v_pxx1-${pxx0})/(v_delta/v_len0)*${cfac}
+variable d1 equal -(v_pxx1--167.298172752291)/(v_delta/v_len0)*${cfac}
+variable d1 equal -(v_pxx1--167.298172752291)/(v_delta/v_len0)*0.0001
+variable d2 equal -(v_pyy1-${pyy0})/(v_delta/v_len0)*${cfac}
+variable d2 equal -(v_pyy1-156.169484537921)/(v_delta/v_len0)*${cfac}
+variable d2 equal -(v_pyy1-156.169484537921)/(v_delta/v_len0)*0.0001
+variable d3 equal -(v_pzz1-${pzz0})/(v_delta/v_len0)*${cfac}
+variable d3 equal -(v_pzz1-11.0791445073204)/(v_delta/v_len0)*${cfac}
+variable d3 equal -(v_pzz1-11.0791445073204)/(v_delta/v_len0)*0.0001
+variable d4 equal -(v_pyz1-${pyz0})/(v_delta/v_len0)*${cfac}
+variable d4 equal -(v_pyz1-389.338699619289)/(v_delta/v_len0)*${cfac}
+variable d4 equal -(v_pyz1-389.338699619289)/(v_delta/v_len0)*0.0001
+variable d5 equal -(v_pxz1-${pxz0})/(v_delta/v_len0)*${cfac}
+variable d5 equal -(v_pxz1--598.129086726536)/(v_delta/v_len0)*${cfac}
+variable d5 equal -(v_pxz1--598.129086726536)/(v_delta/v_len0)*0.0001
+variable d6 equal -(v_pxy1-${pxy0})/(v_delta/v_len0)*${cfac}
+variable d6 equal -(v_pxy1-625.454289403489)/(v_delta/v_len0)*${cfac}
+variable d6 equal -(v_pxy1-625.454289403489)/(v_delta/v_len0)*0.0001
+
+displace_atoms all random ${atomjiggle} ${atomjiggle} ${atomjiggle} 87287 units box
+displace_atoms all random 1e-05 ${atomjiggle} ${atomjiggle} 87287 units box
+displace_atoms all random 1e-05 1e-05 ${atomjiggle} 87287 units box
+displace_atoms all random 1e-05 1e-05 1e-05 87287 units box
+Displacing atoms ...
+unfix 3
+write_restart restart.equil
+System init for write_restart ...
+
+variable dir equal 1
+include displace.mod
+if "${dir} == 1" then "variable len0 equal ${lx0}"
+variable len0 equal ${lx0}
+variable len0 equal 17.3732308883853
+if "${dir} == 2" then "variable len0 equal ${ly0}"
+if "${dir} == 3" then "variable len0 equal ${lz0}"
+if "${dir} == 4" then "variable len0 equal ${lz0}"
+if "${dir} == 5" then "variable len0 equal ${lz0}"
+if "${dir} == 6" then "variable len0 equal ${ly0}"
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.004 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal -${up}*${len0}
+variable delta equal -2e-06*${len0}
+variable delta equal -2e-06*17.3732308883853
+variable deltaxy equal -${up}*xy
+variable deltaxy equal -2e-06*xy
+variable deltaxz equal -${up}*xz
+variable deltaxz equal -2e-06*xz
+variable deltayz equal -${up}*yz
+variable deltayz equal -2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box
+change_box all x delta 0 -3.47464617767706e-05 xy delta ${deltaxy} xz delta ${deltaxz} remap units box
+change_box all x delta 0 -3.47464617767706e-05 xy delta -2.13111944538836e-21 xz delta ${deltaxz} remap units box
+change_box all x delta 0 -3.47464617767706e-05 xy delta -2.13111944538836e-21 xz delta -2.12960982570724e-21 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361581 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361581 17.375955 17.369792) with tilt (1.0655576e-15 1.0648049e-15 1.0648049e-15)
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361581 17.375955 17.369792) with tilt (1.0655576e-15 1.0648028e-15 1.0648049e-15)
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753      5.4845145     -159.48679      160.47176      15.468571      625.33168     -598.2987       389.25558      17.373196      17.401911      17.389584      5257.3374    
+Loop time of 4.005e-06 on 8 procs for 0 steps with 500 atoms
+
+873.9% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875 4.94065645841247e-324  -3819.17529296875
+  Force two-norm initial, final = 0.017536641 0.017536641
+  Force max component initial, final = 0.0052929074 0.0052929074
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 4.005e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -159.486788756927
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 160.471761401396
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 15.4685707850595
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.33167625809
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.298704681146
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.255576248549
+
+variable C1neg equal ${d1}
+variable C1neg equal 390.5691997682
+variable C2neg equal ${d2}
+variable C2neg equal 215.113843173751
+variable C3neg equal ${d3}
+variable C3neg equal 219.471313886955
+variable C4neg equal ${d4}
+variable C4neg equal -4.15616853699987
+variable C5neg equal ${d5}
+variable C5neg equal -8.48089773049878
+variable C6neg equal ${d6}
+variable C6neg equal -6.13065726994933
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.003 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal ${up}*${len0}
+variable delta equal 2e-06*${len0}
+variable delta equal 2e-06*17.3732308883853
+variable deltaxy equal ${up}*xy
+variable deltaxy equal 2e-06*xy
+variable deltaxz equal ${up}*xz
+variable deltaxz equal 2e-06*xz
+variable deltayz equal ${up}*yz
+variable deltayz equal 2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box
+change_box all x delta 0 3.47464617767706e-05 xy delta ${deltaxy} xz delta ${deltaxz} remap units box
+change_box all x delta 0 3.47464617767706e-05 xy delta 2.13111944538836e-21 xz delta ${deltaxz} remap units box
+change_box all x delta 0 3.47464617767706e-05 xy delta 2.13111944538836e-21 xz delta 2.12960982570724e-21 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.36165 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.36165 17.375955 17.369792) with tilt (1.0655619e-15 1.0648049e-15 1.0648049e-15)
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.36165 17.375955 17.369792) with tilt (1.0655619e-15 1.064807e-15 1.0648049e-15)
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.175      -5.7907971     -175.59975      151.65043      6.5769253      625.33699     -598.28187      389.27905      17.373266      17.401911      17.389584      5257.3585    
+Loop time of 4.088e-06 on 8 procs for 0 steps with 500 atoms
+
+1125.2% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17504882812 -nan                -3819.17504882812
+  Force two-norm initial, final = 0.017547222 0.017547222
+  Force max component initial, final = 0.0053166896 0.0053166896
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 4.088e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -175.599748377227
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 151.650431863893
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 6.57692530979941
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.336985661016
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.281870732789
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.279049877121
+
+variable C1pos equal ${d1}
+variable C1pos equal 415.0787812468
+variable C2pos equal ${d2}
+variable C2pos equal 225.952633701399
+variable C3pos equal ${d3}
+variable C3pos equal 225.11095987605
+variable C4pos equal ${d4}
+variable C4pos equal 2.98248710840028
+variable C5pos equal ${d5}
+variable C5pos equal 7.63920031265002
+variable C6pos equal ${d6}
+variable C6pos equal 5.86518712365205
+
+variable C1${dir} equal 0.5*(${C1neg}+${C1pos})
+variable C11 equal 0.5*(${C1neg}+${C1pos})
+variable C11 equal 0.5*(390.5691997682+${C1pos})
+variable C11 equal 0.5*(390.5691997682+415.0787812468)
+variable C2${dir} equal 0.5*(${C2neg}+${C2pos})
+variable C21 equal 0.5*(${C2neg}+${C2pos})
+variable C21 equal 0.5*(215.113843173751+${C2pos})
+variable C21 equal 0.5*(215.113843173751+225.952633701399)
+variable C3${dir} equal 0.5*(${C3neg}+${C3pos})
+variable C31 equal 0.5*(${C3neg}+${C3pos})
+variable C31 equal 0.5*(219.471313886955+${C3pos})
+variable C31 equal 0.5*(219.471313886955+225.11095987605)
+variable C4${dir} equal 0.5*(${C4neg}+${C4pos})
+variable C41 equal 0.5*(${C4neg}+${C4pos})
+variable C41 equal 0.5*(-4.15616853699987+${C4pos})
+variable C41 equal 0.5*(-4.15616853699987+2.98248710840028)
+variable C5${dir} equal 0.5*(${C5neg}+${C5pos})
+variable C51 equal 0.5*(${C5neg}+${C5pos})
+variable C51 equal 0.5*(-8.48089773049878+${C5pos})
+variable C51 equal 0.5*(-8.48089773049878+7.63920031265002)
+variable C6${dir} equal 0.5*(${C6neg}+${C6pos})
+variable C61 equal 0.5*(${C6neg}+${C6pos})
+variable C61 equal 0.5*(-6.13065726994933+${C6pos})
+variable C61 equal 0.5*(-6.13065726994933+5.86518712365205)
+variable dir delete
+variable dir equal 2
+include displace.mod
+if "${dir} == 1" then "variable len0 equal ${lx0}"
+if "${dir} == 2" then "variable len0 equal ${ly0}"
+variable len0 equal ${ly0}
+variable len0 equal 17.4019108764432
+if "${dir} == 3" then "variable len0 equal ${lz0}"
+if "${dir} == 4" then "variable len0 equal ${lz0}"
+if "${dir} == 5" then "variable len0 equal ${lz0}"
+if "${dir} == 6" then "variable len0 equal ${ly0}"
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.006 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal -${up}*${len0}
+variable delta equal -2e-06*${len0}
+variable delta equal -2e-06*17.4019108764432
+variable deltaxy equal -${up}*xy
+variable deltaxy equal -2e-06*xy
+variable deltaxz equal -${up}*xz
+variable deltaxz equal -2e-06*xz
+variable deltayz equal -${up}*yz
+variable deltayz equal -2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box
+change_box all y delta 0 -3.48038217528864e-05 yz delta ${deltayz} remap units box
+change_box all y delta 0 -3.48038217528864e-05 yz delta -2.12960982570724e-21 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375921 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375921 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648028e-15)
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753      5.4795889     -163.04052      164.08078      15.398501      625.36933     -598.2896       389.29913      17.373231      17.401876      17.389584      5257.3374    
+Loop time of 4.005e-06 on 8 procs for 0 steps with 500 atoms
+
+873.9% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875 -0.388661321007576  -3819.17529296875
+  Force two-norm initial, final = 0.017537138 0.017537138
+  Force max component initial, final = 0.005306527 0.005306527
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 4.005e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -163.040519197435
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 164.080784727653
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 15.3985010390745
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.369331367209
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.289604242329
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.299125753669
+
+variable C1neg equal ${d1}
+variable C1neg equal 212.8826777428
+variable C2neg equal ${d2}
+variable C2neg equal 395.5650094866
+variable C3neg equal ${d3}
+variable C3neg equal 215.967826587705
+variable C4neg equal ${d4}
+variable C4neg equal -1.97869328100069
+variable C5neg equal ${d5}
+variable C5neg equal -8.02587578965017
+variable C6neg equal ${d6}
+variable C6neg equal -4.24790181399999
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.012 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal ${up}*${len0}
+variable delta equal 2e-06*${len0}
+variable delta equal 2e-06*17.4019108764432
+variable deltaxy equal ${up}*xy
+variable deltaxy equal 2e-06*xy
+variable deltaxz equal ${up}*xz
+variable deltaxz equal 2e-06*xz
+variable deltayz equal ${up}*yz
+variable deltayz equal 2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box
+change_box all y delta 0 3.48038217528864e-05 yz delta ${deltayz} remap units box
+change_box all y delta 0 3.48038217528864e-05 yz delta 2.12960982570724e-21 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.37599 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.37599 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.064807e-15)
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753     -5.4689029     -171.61085      148.30773      6.8964067      625.32178     -598.2936       389.23584      17.373231      17.401946      17.389584      5257.3585    
+Loop time of 3.86e-06 on 8 procs for 0 steps with 500 atoms
+
+1165.8% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875 -0.388674910866585  -3819.17529296875
+  Force two-norm initial, final = 0.017554013 0.017554013
+  Force max component initial, final = 0.005308941 0.005308941
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.86e-06   |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -171.610847638483
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 148.307732354575
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 6.89640665269357
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.321781994705
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.293604984208
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.235836589002
+
+variable C1pos equal ${d1}
+variable C1pos equal 215.633744309599
+variable C2pos equal ${d2}
+variable C2pos equal 393.0876091673
+variable C3pos equal ${d3}
+variable C3pos equal 209.136892731342
+variable C4pos equal ${d4}
+variable C4pos equal 5.14315151434914
+variable C5pos equal ${d5}
+variable C5pos equal 8.22591288359718
+variable C6pos equal ${d6}
+variable C6pos equal 6.62537043920111
+
+variable C1${dir} equal 0.5*(${C1neg}+${C1pos})
+variable C12 equal 0.5*(${C1neg}+${C1pos})
+variable C12 equal 0.5*(212.8826777428+${C1pos})
+variable C12 equal 0.5*(212.8826777428+215.633744309599)
+variable C2${dir} equal 0.5*(${C2neg}+${C2pos})
+variable C22 equal 0.5*(${C2neg}+${C2pos})
+variable C22 equal 0.5*(395.5650094866+${C2pos})
+variable C22 equal 0.5*(395.5650094866+393.0876091673)
+variable C3${dir} equal 0.5*(${C3neg}+${C3pos})
+variable C32 equal 0.5*(${C3neg}+${C3pos})
+variable C32 equal 0.5*(215.967826587705+${C3pos})
+variable C32 equal 0.5*(215.967826587705+209.136892731342)
+variable C4${dir} equal 0.5*(${C4neg}+${C4pos})
+variable C42 equal 0.5*(${C4neg}+${C4pos})
+variable C42 equal 0.5*(-1.97869328100069+${C4pos})
+variable C42 equal 0.5*(-1.97869328100069+5.14315151434914)
+variable C5${dir} equal 0.5*(${C5neg}+${C5pos})
+variable C52 equal 0.5*(${C5neg}+${C5pos})
+variable C52 equal 0.5*(-8.02587578965017+${C5pos})
+variable C52 equal 0.5*(-8.02587578965017+8.22591288359718)
+variable C6${dir} equal 0.5*(${C6neg}+${C6pos})
+variable C62 equal 0.5*(${C6neg}+${C6pos})
+variable C62 equal 0.5*(-4.24790181399999+${C6pos})
+variable C62 equal 0.5*(-4.24790181399999+6.62537043920111)
+variable dir delete
+variable dir equal 3
+include displace.mod
+if "${dir} == 1" then "variable len0 equal ${lx0}"
+if "${dir} == 2" then "variable len0 equal ${ly0}"
+if "${dir} == 3" then "variable len0 equal ${lz0}"
+variable len0 equal ${lz0}
+variable len0 equal 17.3895838962708
+if "${dir} == 4" then "variable len0 equal ${lz0}"
+if "${dir} == 5" then "variable len0 equal ${lz0}"
+if "${dir} == 6" then "variable len0 equal ${ly0}"
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.001 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal -${up}*${len0}
+variable delta equal -2e-06*${len0}
+variable delta equal -2e-06*17.3895838962708
+variable deltaxy equal -${up}*xy
+variable deltaxy equal -2e-06*xy
+variable deltaxz equal -${up}*xz
+variable deltaxz equal -2e-06*xz
+variable deltayz equal -${up}*yz
+variable deltayz equal -2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+change_box all z delta 0 ${delta} remap units box
+change_box all z delta 0 -3.47791677925416e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369757) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753      5.4864899     -163.01087      160.42895      19.041397      625.31311     -598.30065      389.27065      17.373231      17.401911      17.389549      5257.3374    
+Loop time of 3.834e-06 on 8 procs for 0 steps with 500 atoms
+
+652.1% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875                  0  -3819.17529296875
+  Force two-norm initial, final = 0.0175387 0.0175387
+  Force max component initial, final = 0.0053050369 0.0053050369
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.834e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -163.010874654221
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 160.428947560492
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 19.0413967072173
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.313112089484
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.30064828784
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.270652823836
+
+variable C1neg equal ${d1}
+variable C1neg equal 214.364904903501
+variable C2neg equal ${d2}
+variable C2neg equal 212.97315112855
+variable C3neg equal ${d3}
+variable C3neg equal 398.112609994845
+variable C4neg equal ${d4}
+variable C4neg equal -3.40233977265143
+variable C5neg equal ${d5}
+variable C5neg equal -8.57807806519873
+variable C6neg equal ${d6}
+variable C6neg equal -7.05886570025314
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.003 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal ${up}*${len0}
+variable delta equal 2e-06*${len0}
+variable delta equal 2e-06*17.3895838962708
+variable deltaxy equal ${up}*xy
+variable deltaxy equal 2e-06*xy
+variable deltaxz equal ${up}*xz
+variable deltaxz equal 2e-06*xz
+variable deltayz equal ${up}*yz
+variable deltayz equal 2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+change_box all z delta 0 ${delta} remap units box
+change_box all z delta 0 3.47791677925416e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369827) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.175      -5.4831983     -171.63096      151.93026      3.2511051      625.37008     -598.29511      389.25523      17.373231      17.401911      17.389619      5257.3585    
+Loop time of 3.778e-06 on 8 procs for 0 steps with 500 atoms
+
+1217.6% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17504882812  -0.38866823514637  -3819.17504882812
+  Force two-norm initial, final = 0.017545337 0.017545337
+  Force max component initial, final = 0.005308792 0.005308792
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.778e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -171.630955713282
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 151.930255614822
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 3.25110513969326
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.370081336069
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.295112635706
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.255227167004
+
+variable C1pos equal ${d1}
+variable C1pos equal 216.639148049549
+variable C2pos equal ${d2}
+variable C2pos equal 211.96144615495
+variable C3pos equal ${d3}
+variable C3pos equal 391.401968381357
+variable C4pos equal ${d4}
+variable C4pos equal 4.17362261424898
+variable C5pos equal ${d5}
+variable C5pos equal 8.30129545850014
+variable C6pos equal ${d6}
+variable C6pos equal 4.2104033710018
+
+variable C1${dir} equal 0.5*(${C1neg}+${C1pos})
+variable C13 equal 0.5*(${C1neg}+${C1pos})
+variable C13 equal 0.5*(214.364904903501+${C1pos})
+variable C13 equal 0.5*(214.364904903501+216.639148049549)
+variable C2${dir} equal 0.5*(${C2neg}+${C2pos})
+variable C23 equal 0.5*(${C2neg}+${C2pos})
+variable C23 equal 0.5*(212.97315112855+${C2pos})
+variable C23 equal 0.5*(212.97315112855+211.96144615495)
+variable C3${dir} equal 0.5*(${C3neg}+${C3pos})
+variable C33 equal 0.5*(${C3neg}+${C3pos})
+variable C33 equal 0.5*(398.112609994845+${C3pos})
+variable C33 equal 0.5*(398.112609994845+391.401968381357)
+variable C4${dir} equal 0.5*(${C4neg}+${C4pos})
+variable C43 equal 0.5*(${C4neg}+${C4pos})
+variable C43 equal 0.5*(-3.40233977265143+${C4pos})
+variable C43 equal 0.5*(-3.40233977265143+4.17362261424898)
+variable C5${dir} equal 0.5*(${C5neg}+${C5pos})
+variable C53 equal 0.5*(${C5neg}+${C5pos})
+variable C53 equal 0.5*(-8.57807806519873+${C5pos})
+variable C53 equal 0.5*(-8.57807806519873+8.30129545850014)
+variable C6${dir} equal 0.5*(${C6neg}+${C6pos})
+variable C63 equal 0.5*(${C6neg}+${C6pos})
+variable C63 equal 0.5*(-7.05886570025314+${C6pos})
+variable C63 equal 0.5*(-7.05886570025314+4.2104033710018)
+variable dir delete
+variable dir equal 4
+include displace.mod
+if "${dir} == 1" then "variable len0 equal ${lx0}"
+if "${dir} == 2" then "variable len0 equal ${ly0}"
+if "${dir} == 3" then "variable len0 equal ${lz0}"
+if "${dir} == 4" then "variable len0 equal ${lz0}"
+variable len0 equal ${lz0}
+variable len0 equal 17.3895838962708
+if "${dir} == 5" then "variable len0 equal ${lz0}"
+if "${dir} == 6" then "variable len0 equal ${ly0}"
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.001 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal -${up}*${len0}
+variable delta equal -2e-06*${len0}
+variable delta equal -2e-06*17.3895838962708
+variable deltaxy equal -${up}*xy
+variable deltaxy equal -2e-06*xy
+variable deltaxz equal -${up}*xz
+variable deltaxz equal -2e-06*xz
+variable deltayz equal -${up}*yz
+variable deltayz equal -2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+change_box all yz delta ${delta} remap units box
+change_box all yz delta -3.47791677925416e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 -3.4779168e-05)
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753      0.0058837882  -167.34965      156.21949      11.147811      625.33446     -598.29351      392.87542      17.373231      17.401911      17.389584      5257.348     
+Loop time of 3.786e-06 on 8 procs for 0 steps with 500 atoms
+
+1215.0% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875 1.58101006669199e-322  -3819.17529296875
+  Force two-norm initial, final = 0.017545541 0.017545541
+  Force max component initial, final = 0.0053097755 0.0053097755
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.786e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -167.349650979891
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 156.219491440032
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 11.1478109045979
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.334458116448
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.293511891051
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 392.875420968908
+
+variable C1neg equal ${d1}
+variable C1neg equal -2.57391138000003
+variable C2neg equal ${d2}
+variable C2neg equal 2.50034510554968
+variable C3neg equal ${d3}
+variable C3neg equal 3.43331986387501
+variable C4neg equal ${d4}
+variable C4neg equal 176.836067480949
+variable C5neg equal ${d5}
+variable C5neg equal -8.22125822575117
+variable C6neg equal ${d6}
+variable C6neg equal -5.99156435205259
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.001 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal ${up}*${len0}
+variable delta equal 2e-06*${len0}
+variable delta equal 2e-06*17.3895838962708
+variable deltaxy equal ${up}*xy
+variable deltaxy equal 2e-06*xy
+variable deltaxz equal ${up}*xz
+variable deltaxz equal 2e-06*xz
+variable deltayz equal ${up}*yz
+variable deltayz equal 2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+change_box all yz delta ${delta} remap units box
+change_box all yz delta 3.47791677925416e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 3.4779168e-05)
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.175       0.0038402806  -167.30673      156.18         11.138247      625.33798     -598.29691      385.65642      17.373231      17.401911      17.389584      5257.348     
+Loop time of 3.763e-06 on 8 procs for 0 steps with 500 atoms
+
+1222.4% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17504882812 -0.388668235146372  -3819.17504882812
+  Force two-norm initial, final = 0.017543369 0.017543369
+  Force max component initial, final = 0.0053061247 0.0053061247
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.763e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -167.306728237541
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 156.18000179049
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 11.1382472889199
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.337982031816
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.296908654834
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 385.656416951085
+
+variable C1pos equal ${d1}
+variable C1pos equal 0.42777426249927
+variable C2pos equal ${d2}
+variable C2pos equal -0.525862628450113
+variable C3pos equal ${d3}
+variable C3pos equal -2.95513907997496
+variable C4pos equal ${d4}
+variable C4pos equal 184.114133410199
+variable C5pos equal ${d5}
+variable C5pos equal 8.39109641490268
+variable C6pos equal ${d6}
+variable C6pos equal 5.81536858365439
+
+variable C1${dir} equal 0.5*(${C1neg}+${C1pos})
+variable C14 equal 0.5*(${C1neg}+${C1pos})
+variable C14 equal 0.5*(-2.57391138000003+${C1pos})
+variable C14 equal 0.5*(-2.57391138000003+0.42777426249927)
+variable C2${dir} equal 0.5*(${C2neg}+${C2pos})
+variable C24 equal 0.5*(${C2neg}+${C2pos})
+variable C24 equal 0.5*(2.50034510554968+${C2pos})
+variable C24 equal 0.5*(2.50034510554968+-0.525862628450113)
+variable C3${dir} equal 0.5*(${C3neg}+${C3pos})
+variable C34 equal 0.5*(${C3neg}+${C3pos})
+variable C34 equal 0.5*(3.43331986387501+${C3pos})
+variable C34 equal 0.5*(3.43331986387501+-2.95513907997496)
+variable C4${dir} equal 0.5*(${C4neg}+${C4pos})
+variable C44 equal 0.5*(${C4neg}+${C4pos})
+variable C44 equal 0.5*(176.836067480949+${C4pos})
+variable C44 equal 0.5*(176.836067480949+184.114133410199)
+variable C5${dir} equal 0.5*(${C5neg}+${C5pos})
+variable C54 equal 0.5*(${C5neg}+${C5pos})
+variable C54 equal 0.5*(-8.22125822575117+${C5pos})
+variable C54 equal 0.5*(-8.22125822575117+8.39109641490268)
+variable C6${dir} equal 0.5*(${C6neg}+${C6pos})
+variable C64 equal 0.5*(${C6neg}+${C6pos})
+variable C64 equal 0.5*(-5.99156435205259+${C6pos})
+variable C64 equal 0.5*(-5.99156435205259+5.81536858365439)
+variable dir delete
+variable dir equal 5
+include displace.mod
+if "${dir} == 1" then "variable len0 equal ${lx0}"
+if "${dir} == 2" then "variable len0 equal ${ly0}"
+if "${dir} == 3" then "variable len0 equal ${lz0}"
+if "${dir} == 4" then "variable len0 equal ${lz0}"
+if "${dir} == 5" then "variable len0 equal ${lz0}"
+variable len0 equal ${lz0}
+variable len0 equal 17.3895838962708
+if "${dir} == 6" then "variable len0 equal ${ly0}"
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.002 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal -${up}*${len0}
+variable delta equal -2e-06*${len0}
+variable delta equal -2e-06*17.3895838962708
+variable deltaxy equal -${up}*xy
+variable deltaxy equal -2e-06*xy
+variable deltaxz equal -${up}*xz
+variable deltaxz equal -2e-06*xz
+variable deltayz equal -${up}*yz
+variable deltayz equal -2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+change_box all xz delta ${delta} remap units box
+change_box all xz delta -3.47791677925416e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 -3.4779168e-05 1.0648049e-15)
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753      0.0030274187  -167.32969      156.18676      11.152011      625.35108     -594.66918      389.26759      17.373231      17.401911      17.389584      5257.348     
+Loop time of 3.632e-06 on 8 procs for 0 steps with 500 atoms
+
+1266.5% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875                  0  -3819.17529296875
+  Force two-norm initial, final = 0.017541068 0.017541068
+  Force max component initial, final = 0.0053069293 0.0053069293
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.632e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -167.329688180973
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 156.186758989032
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 11.1520114480461
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.351078645119
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -594.669183099049
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.267585553992
+
+variable C1neg equal ${d1}
+variable C1neg equal -1.57577143409924
+variable C2neg equal ${d2}
+variable C2neg equal 0.863722555550339
+variable C3neg equal ${d3}
+variable C3neg equal 3.64334703628497
+variable C4neg equal ${d4}
+variable C4neg equal -3.55570326485122
+variable C5neg equal ${d5}
+variable C5neg equal 172.995181374353
+variable C6neg equal ${d6}
+variable C6neg equal -5.16053791850482
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.001 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal ${up}*${len0}
+variable delta equal 2e-06*${len0}
+variable delta equal 2e-06*17.3895838962708
+variable deltaxy equal ${up}*xy
+variable deltaxy equal 2e-06*xy
+variable deltaxz equal ${up}*xz
+variable deltaxz equal 2e-06*xz
+variable deltayz equal ${up}*yz
+variable deltayz equal 2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+change_box all xz delta ${delta} remap units box
+change_box all xz delta 3.47791677925416e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 3.4779168e-05 1.0648049e-15)
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753     -0.0011943167  -167.32191      156.17911      11.139219      625.32554     -601.91804      389.2555       17.373231      17.401911      17.389584      5257.348     
+Loop time of 3.597e-06 on 8 procs for 0 steps with 500 atoms
+
+389.2% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875  -0.38866823514637  -3819.17529296875
+  Force two-norm initial, final = 0.017543047 0.017543047
+  Force max component initial, final = 0.0053079724 0.0053079724
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.597e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -167.321913769748
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 156.179111729392
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 11.1392190903231
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 625.325539340953
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -601.918040492687
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.255497071117
+
+variable C1pos equal ${d1}
+variable C1pos equal 1.18705087284923
+variable C2pos equal ${d2}
+variable C2pos equal -0.481359573549867
+variable C3pos equal ${d3}
+variable C3pos equal -3.00372915013503
+variable C4pos equal ${d4}
+variable C4pos equal 4.16012740859912
+variable C5pos equal ${d5}
+variable C5pos equal 189.447688307553
+variable C6pos equal ${d6}
+variable C6pos equal 6.4375031268014
+
+variable C1${dir} equal 0.5*(${C1neg}+${C1pos})
+variable C15 equal 0.5*(${C1neg}+${C1pos})
+variable C15 equal 0.5*(-1.57577143409924+${C1pos})
+variable C15 equal 0.5*(-1.57577143409924+1.18705087284923)
+variable C2${dir} equal 0.5*(${C2neg}+${C2pos})
+variable C25 equal 0.5*(${C2neg}+${C2pos})
+variable C25 equal 0.5*(0.863722555550339+${C2pos})
+variable C25 equal 0.5*(0.863722555550339+-0.481359573549867)
+variable C3${dir} equal 0.5*(${C3neg}+${C3pos})
+variable C35 equal 0.5*(${C3neg}+${C3pos})
+variable C35 equal 0.5*(3.64334703628497+${C3pos})
+variable C35 equal 0.5*(3.64334703628497+-3.00372915013503)
+variable C4${dir} equal 0.5*(${C4neg}+${C4pos})
+variable C45 equal 0.5*(${C4neg}+${C4pos})
+variable C45 equal 0.5*(-3.55570326485122+${C4pos})
+variable C45 equal 0.5*(-3.55570326485122+4.16012740859912)
+variable C5${dir} equal 0.5*(${C5neg}+${C5pos})
+variable C55 equal 0.5*(${C5neg}+${C5pos})
+variable C55 equal 0.5*(172.995181374353+${C5pos})
+variable C55 equal 0.5*(172.995181374353+189.447688307553)
+variable C6${dir} equal 0.5*(${C6neg}+${C6pos})
+variable C65 equal 0.5*(${C6neg}+${C6pos})
+variable C65 equal 0.5*(-5.16053791850482+${C6pos})
+variable C65 equal 0.5*(-5.16053791850482+6.4375031268014)
+variable dir delete
+variable dir equal 6
+include displace.mod
+if "${dir} == 1" then "variable len0 equal ${lx0}"
+if "${dir} == 2" then "variable len0 equal ${ly0}"
+if "${dir} == 3" then "variable len0 equal ${lz0}"
+if "${dir} == 4" then "variable len0 equal ${lz0}"
+if "${dir} == 5" then "variable len0 equal ${lz0}"
+if "${dir} == 6" then "variable len0 equal ${ly0}"
+variable len0 equal ${ly0}
+variable len0 equal 17.4019108764432
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.002 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal -${up}*${len0}
+variable delta equal -2e-06*${len0}
+variable delta equal -2e-06*17.4019108764432
+variable deltaxy equal -${up}*xy
+variable deltaxy equal -2e-06*xy
+variable deltaxz equal -${up}*xz
+variable deltaxz equal -2e-06*xz
+variable deltayz equal -${up}*yz
+variable deltayz equal -2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+change_box all xy delta ${delta} remap units box
+change_box all xy delta -3.48038217528864e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (-3.4803822e-05 1.0648049e-15 1.0648049e-15)
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.175      -0.011870509   -167.33281      156.1933       11.103903      628.94342     -598.28741      389.25359      17.373231      17.401911      17.389584      5257.348     
+Loop time of 4.07e-06 on 8 procs for 0 steps with 500 atoms
+
+368.6% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17504882812 4.68129754057208e-310  -3819.17504882812
+  Force two-norm initial, final = 0.017539758 0.017539758
+  Force max component initial, final = 0.0053099841 0.0053099841
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 4.07e-06   |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -167.332812477073
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 156.193298213427
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 11.1039027374611
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 628.943419731121
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.287408614949
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.253589797335
+
+variable C1neg equal ${d1}
+variable C1neg equal -1.73198623909911
+variable C2neg equal ${d2}
+variable C2neg equal 1.19068377530027
+variable C3neg equal ${d3}
+variable C3neg equal 1.23791150703498
+variable C4neg equal ${d4}
+variable C4neg equal -4.25549109770032
+variable C5neg equal ${d5}
+variable C5neg equal -7.91609442064782
+variable C6neg equal ${d6}
+variable C6neg equal 174.456516381599
+
+clear
+  using 8 OpenMP thread(s) per MPI task
+box tilt large
+
+The 'box' command has been removed and will be ignored
+
+read_restart restart.equil
+Reading restart file ...
+  restart file = 12 Jun 2025, LAMMPS = 12 Jun 2025
+  restoring atom style atomic from restart
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (1.0655597e-15 1.0648049e-15 1.0648049e-15)
+  1 by 1 by 1 MPI processor grid
+  pair style metatomic stores no restart info
+  500 atoms
+  read_restart CPU = 0.004 seconds
+include potential.mod
+pair_style metatomic pet-mad-latest.pt device cpu
+
+This is the PET-MAD v1.0.2 model
+================================
+
+A universal interatomic potential for advanced materials modeling
+
+Model authors
+-------------
+
+- Arslan Mazitov (arslan.mazitov@epfl.ch)
+- Filippo Bigi
+- Matthias Kellner
+- Paolo Pegolo
+- Davide Tisi
+- Guillaume Fraux
+- Sergey Pozdnyakov
+- Philip Loche
+- Michele Ceriotti (michele.ceriotti@epfl.ch)
+
+Model references
+----------------
+
+Please cite the following references when using this model:
+- about this specific model:
+  * http://arxiv.org/abs/2503.14118
+- about the architecture of this model:
+  * LLPR (uncertainty method):
+    https://iopscience.iop.org/article/10.1088/2632-2153/ad805f
+  * LPR (if using per-atom uncertainty):
+    https://pubs.acs.org/doi/10.1021/acs.jctc.3c00704
+  * https://arxiv.org/abs/2305.19302v3
+
+WARNING: the model declared support for unknown device 'cuda', it will be ignored (src/ML-METATOMIC/pair_metatomic.cpp:216)
+Running simulation on cpu device with float32 data
+pair_coeff * * 28 26 24
+neighbor 2.0 bin
+neigh_modify delay 0 check yes
+min_style cg
+min_modify dmax ${dmax} line quadratic
+min_modify dmax 0.01 line quadratic
+thermo 1
+thermo_style custom step temp pe press pxx pyy pzz pxy pxz pyz lx ly lz vol
+thermo_modify norm no
+
+variable delta equal ${up}*${len0}
+variable delta equal 2e-06*${len0}
+variable delta equal 2e-06*17.4019108764432
+variable deltaxy equal ${up}*xy
+variable deltaxy equal 2e-06*xy
+variable deltaxz equal ${up}*xz
+variable deltaxz equal 2e-06*xz
+variable deltayz equal ${up}*yz
+variable deltayz equal 2e-06*yz
+if "${dir} == 1" then "change_box all x delta 0 ${delta} xy delta ${deltaxy} xz delta ${deltaxz} remap units box"
+if "${dir} == 2" then "change_box all y delta 0 ${delta} yz delta ${deltayz} remap units box"
+if "${dir} == 3" then "change_box all z delta 0 ${delta} remap units box"
+if "${dir} == 4" then "change_box all yz delta ${delta} remap units box"
+if "${dir} == 5" then "change_box all xz delta ${delta} remap units box"
+if "${dir} == 6" then "change_box all xy delta ${delta} remap units box"
+change_box all xy delta ${delta} remap units box
+change_box all xy delta 3.48038217528864e-05 remap units box
+Changing box ...
+  triclinic box = (-0.011615444 -0.025955438 -0.019791948) to (17.361615 17.375955 17.369792) with tilt (3.4803822e-05 1.0648049e-15 1.0648049e-15)
+
+minimize ${etol} ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 ${ftol} ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 ${maxiter} ${maxeval}
+minimize 1e-08 1e-12 0 ${maxeval}
+minimize 1e-08 1e-12 0 50000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 4 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair metatomic, perpetual
+      attributes: full, newton on, ghost
+      pair build: full/bin/ghost
+      stencil: full/ghost/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.79 | 19.79 | 19.79 Mbytes
+   Step          Temp          PotEng         Press           Pxx            Pyy            Pzz            Pxy            Pxz            Pyz             Lx             Ly             Lz           Volume    
+         0   0             -3819.1753      0.014445328   -167.2997       156.17017      11.17286       621.74036     -598.31046      389.26431      17.373231      17.401911      17.389584      5257.348     
+Loop time of 3.727e-06 on 8 procs for 0 steps with 500 atoms
+
+402.5% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+     -3819.17529296875 4.68129761149066e-310  -3819.17529296875
+  Force two-norm initial, final = 0.017544282 0.017544282
+  Force max component initial, final = 0.0053044558 0.0053044558
+  Final line search alpha, max atom move = 0 0
+  Iterations, force evaluations = 0 0
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 3.727e-06  |            |       |100.00
+
+Nlocal:            500 ave         500 max         500 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5584 ave        5584 max        5584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       271228 ave      271228 max      271228 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 271228
+Ave neighs/atom = 542.456
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable tmp equal pxx
+variable pxx1 equal ${tmp}
+variable pxx1 equal -167.299698571317
+variable tmp equal pyy
+variable pyy1 equal ${tmp}
+variable pyy1 equal 156.170174789385
+variable tmp equal pzz
+variable pzz1 equal ${tmp}
+variable pzz1 equal 11.1728597669338
+variable tmp equal pxy
+variable pxy1 equal ${tmp}
+variable pxy1 equal 621.740355072761
+variable tmp equal pxz
+variable pxz1 equal ${tmp}
+variable pxz1 equal -598.310459380942
+variable tmp equal pyz
+variable pyz1 equal ${tmp}
+variable pyz1 equal 389.264306859538
+
+variable C1pos equal ${d1}
+variable C1pos equal 0.0762909512999954
+variable C2pos equal ${d2}
+variable C2pos equal -0.0345125731996632
+variable C3pos equal ${d3}
+variable C3pos equal -4.68576298067003
+variable C4pos equal ${d4}
+variable C4pos equal 3.71963798754962
+variable C5pos equal ${d5}
+variable C5pos equal 9.06863272030023
+variable C6pos equal ${d6}
+variable C6pos equal 185.696716536404
+
+variable C1${dir} equal 0.5*(${C1neg}+${C1pos})
+variable C16 equal 0.5*(${C1neg}+${C1pos})
+variable C16 equal 0.5*(-1.73198623909911+${C1pos})
+variable C16 equal 0.5*(-1.73198623909911+0.0762909512999954)
+variable C2${dir} equal 0.5*(${C2neg}+${C2pos})
+variable C26 equal 0.5*(${C2neg}+${C2pos})
+variable C26 equal 0.5*(1.19068377530027+${C2pos})
+variable C26 equal 0.5*(1.19068377530027+-0.0345125731996632)
+variable C3${dir} equal 0.5*(${C3neg}+${C3pos})
+variable C36 equal 0.5*(${C3neg}+${C3pos})
+variable C36 equal 0.5*(1.23791150703498+${C3pos})
+variable C36 equal 0.5*(1.23791150703498+-4.68576298067003)
+variable C4${dir} equal 0.5*(${C4neg}+${C4pos})
+variable C46 equal 0.5*(${C4neg}+${C4pos})
+variable C46 equal 0.5*(-4.25549109770032+${C4pos})
+variable C46 equal 0.5*(-4.25549109770032+3.71963798754962)
+variable C5${dir} equal 0.5*(${C5neg}+${C5pos})
+variable C56 equal 0.5*(${C5neg}+${C5pos})
+variable C56 equal 0.5*(-7.91609442064782+${C5pos})
+variable C56 equal 0.5*(-7.91609442064782+9.06863272030023)
+variable C6${dir} equal 0.5*(${C6neg}+${C6pos})
+variable C66 equal 0.5*(${C6neg}+${C6pos})
+variable C66 equal 0.5*(174.456516381599+${C6pos})
+variable C66 equal 0.5*(174.456516381599+185.696716536404)
+variable dir delete
+
+variable C11all equal ${C11}
+variable C11all equal 402.8239905075
+variable C22all equal ${C22}
+variable C22all equal 394.32630932695
+variable C33all equal ${C33}
+variable C33all equal 394.757289188101
+variable C12all equal 0.5*(${C12}+${C21})
+variable C12all equal 0.5*(214.258211026199+${C21})
+variable C12all equal 0.5*(214.258211026199+220.533238437575)
+variable C13all equal 0.5*(${C13}+${C31})
+variable C13all equal 0.5*(215.502026476525+${C31})
+variable C13all equal 0.5*(215.502026476525+222.291136881502)
+variable C23all equal 0.5*(${C23}+${C32})
+variable C23all equal 0.5*(212.46729864175+${C32})
+variable C23all equal 0.5*(212.46729864175+212.552359659523)
+variable C44all equal ${C44}
+variable C44all equal 180.475100445574
+variable C55all equal ${C55}
+variable C55all equal 181.221434840953
+variable C66all equal ${C66}
+variable C66all equal 180.076616459002
+
+variable C14all equal 0.5*(${C14}+${C41})
+variable C14all equal 0.5*(-1.07306855875038+${C41})
+variable C14all equal 0.5*(-1.07306855875038+-0.586840714299795)
+variable C15all equal 0.5*(${C15}+${C51})
+variable C15all equal 0.5*(-0.194360280625005+${C51})
+variable C15all equal 0.5*(-0.194360280625005+-0.42084870892438)
+variable C16all equal 0.5*(${C16}+${C61})
+variable C16all equal 0.5*(-0.827847643899557+${C61})
+variable C16all equal 0.5*(-0.827847643899557+-0.13273507314864)
+
+variable C24all equal 0.5*(${C24}+${C42})
+variable C24all equal 0.5*(0.987241238549784+${C42})
+variable C24all equal 0.5*(0.987241238549784+1.58222911667422)
+variable C25all equal 0.5*(${C25}+${C52})
+variable C25all equal 0.5*(0.191181491000236+${C52})
+variable C25all equal 0.5*(0.191181491000236+0.100018546973505)
+variable C26all equal 0.5*(${C26}+${C62})
+variable C26all equal 0.5*(0.578085601050303+${C62})
+variable C26all equal 0.5*(0.578085601050303+1.18873431260056)
+
+variable C34all equal 0.5*(${C34}+${C43})
+variable C34all equal 0.5*(0.239090391950025+${C43})
+variable C34all equal 0.5*(0.239090391950025+0.385641420798775)
+variable C35all equal 0.5*(${C35}+${C53})
+variable C35all equal 0.5*(0.31980894307497+${C53})
+variable C35all equal 0.5*(0.31980894307497+-0.138391303349295)
+variable C36all equal 0.5*(${C36}+${C63})
+variable C36all equal 0.5*(-1.72392573681753+${C63})
+variable C36all equal 0.5*(-1.72392573681753+-1.42423116462567)
+
+variable C45all equal 0.5*(${C45}+${C54})
+variable C45all equal 0.5*(0.30221207187395+${C54})
+variable C45all equal 0.5*(0.30221207187395+0.0849190945757554)
+variable C46all equal 0.5*(${C46}+${C64})
+variable C46all equal 0.5*(-0.26792655507535+${C64})
+variable C46all equal 0.5*(-0.26792655507535+-0.0880978841991)
+variable C56all equal 0.5*(${C56}+${C65})
+variable C56all equal 0.5*(0.576269149826205+${C65})
+variable C56all equal 0.5*(0.576269149826205+0.63848260414829)
+
+# Усредненные модули (предполагая квази-изотропную структуру)
+
+variable C11cubic equal (${C11all}+${C22all}+${C33all})/3.0
+variable C11cubic equal (402.8239905075+${C22all}+${C33all})/3.0
+variable C11cubic equal (402.8239905075+394.32630932695+${C33all})/3.0
+variable C11cubic equal (402.8239905075+394.32630932695+394.757289188101)/3.0
+variable C12cubic equal (${C12all}+${C13all}+${C23all})/3.0
+variable C12cubic equal (217.395724731887+${C13all}+${C23all})/3.0
+variable C12cubic equal (217.395724731887+218.896581679014+${C23all})/3.0
+variable C12cubic equal (217.395724731887+218.896581679014+212.509829150637)/3.0
+variable C44cubic equal (${C44all}+${C55all}+${C66all})/3.0
+variable C44cubic equal (180.475100445574+${C55all}+${C66all})/3.0
+variable C44cubic equal (180.475100445574+181.221434840953+${C66all})/3.0
+variable C44cubic equal (180.475100445574+181.221434840953+180.076616459002)/3.0
+
+variable bulkmodulus equal (${C11cubic}+2*${C12cubic})/3.0
+variable bulkmodulus equal (397.302529674184+2*${C12cubic})/3.0
+variable bulkmodulus equal (397.302529674184+2*216.267378520513)/3.0
+variable shearmodulus1 equal ${C44cubic}
+variable shearmodulus1 equal 180.591050581843
+variable shearmodulus2 equal (${C11cubic}-${C12cubic})/2.0
+variable shearmodulus2 equal (397.302529674184-${C12cubic})/2.0
+variable shearmodulus2 equal (397.302529674184-216.267378520513)/2.0
+variable poissonratio equal 1.0/(1.0+${C11cubic}/${C12cubic})
+variable poissonratio equal 1.0/(1.0+397.302529674184/${C12cubic})
+variable poissonratio equal 1.0/(1.0+397.302529674184/216.267378520513)
+
+variable B equal (${C11cubic}+2*${C12cubic})/3.0
+variable B equal (397.302529674184+2*${C12cubic})/3.0
+variable B equal (397.302529674184+2*216.267378520513)/3.0
+variable G equal (${C11cubic}-${C12cubic}+3*${C44cubic})/5.0
+variable G equal (397.302529674184-${C12cubic}+3*${C44cubic})/5.0
+variable G equal (397.302529674184-216.267378520513+3*${C44cubic})/5.0
+variable G equal (397.302529674184-216.267378520513+3*180.591050581843)/5.0
+variable E equal 9.0*${B}*${G}/(3.0*${B}+${G})
+variable E equal 9.0*276.61242890507*${G}/(3.0*${B}+${G})
+variable E equal 9.0*276.61242890507*144.56166057984/(3.0*${B}+${G})
+variable E equal 9.0*276.61242890507*144.56166057984/(3.0*276.61242890507+${G})
+variable E equal 9.0*276.61242890507*144.56166057984/(3.0*276.61242890507+144.56166057984)
+variable nu equal (3.0*${B}-2.0*${G})/(2.0*(3.0*${B}+${G}))
+variable nu equal (3.0*276.61242890507-2.0*${G})/(2.0*(3.0*${B}+${G}))
+variable nu equal (3.0*276.61242890507-2.0*144.56166057984)/(2.0*(3.0*${B}+${G}))
+variable nu equal (3.0*276.61242890507-2.0*144.56166057984)/(2.0*(3.0*276.61242890507+${G}))
+variable nu equal (3.0*276.61242890507-2.0*144.56166057984)/(2.0*(3.0*276.61242890507+144.56166057984))
+
+print "Elastic Constant C11all = ${C11all} ${cunits}"
+Elastic Constant C11all = 402.8239905075 GPa
+print "Elastic Constant C22all = ${C22all} ${cunits}"
+Elastic Constant C22all = 394.32630932695 GPa
+print "Elastic Constant C33all = ${C33all} ${cunits}"
+Elastic Constant C33all = 394.757289188101 GPa
+print "Elastic Constant C12all = ${C12all} ${cunits}"
+Elastic Constant C12all = 217.395724731887 GPa
+print "Elastic Constant C13all = ${C13all} ${cunits}"
+Elastic Constant C13all = 218.896581679014 GPa
+print "Elastic Constant C23all = ${C23all} ${cunits}"
+Elastic Constant C23all = 212.509829150637 GPa
+print "Elastic Constant C44all = ${C44all} ${cunits}"
+Elastic Constant C44all = 180.475100445574 GPa
+print "Elastic Constant C55all = ${C55all} ${cunits}"
+Elastic Constant C55all = 181.221434840953 GPa
+print "Elastic Constant C66all = ${C66all} ${cunits}"
+Elastic Constant C66all = 180.076616459002 GPa
+
+print "Elastic Constant C14all = ${C14all} ${cunits}"
+Elastic Constant C14all = -0.829954636525088 GPa
+print "Elastic Constant C15all = ${C15all} ${cunits}"
+Elastic Constant C15all = -0.307604494774692 GPa
+print "Elastic Constant C16all = ${C16all} ${cunits}"
+Elastic Constant C16all = -0.480291358524098 GPa
+
+print "Elastic Constant C24all = ${C24all} ${cunits}"
+Elastic Constant C24all = 1.284735177612 GPa
+print "Elastic Constant C25all = ${C25all} ${cunits}"
+Elastic Constant C25all = 0.14560001898687 GPa
+print "Elastic Constant C26all = ${C26all} ${cunits}"
+Elastic Constant C26all = 0.883409956825432 GPa
+
+print "Elastic Constant C34all = ${C34all} ${cunits}"
+Elastic Constant C34all = 0.3123659063744 GPa
+print "Elastic Constant C35all = ${C35all} ${cunits}"
+Elastic Constant C35all = 0.0907088198628375 GPa
+print "Elastic Constant C36all = ${C36all} ${cunits}"
+Elastic Constant C36all = -1.5740784507216 GPa
+
+print "Elastic Constant C45all = ${C45all} ${cunits}"
+Elastic Constant C45all = 0.193565583224853 GPa
+print "Elastic Constant C46all = ${C46all} ${cunits}"
+Elastic Constant C46all = -0.178012219637225 GPa
+print "Elastic Constant C56all = ${C56all} ${cunits}"
+Elastic Constant C56all = 0.607375876987247 GPa
+
+print "========================================="
+=========================================
+print "Averaged Elastic Properties"
+Averaged Elastic Properties
+print "========================================="
+=========================================
+
+print "Bulk Modulus = ${bulkmodulus} ${cunits}"
+Bulk Modulus = 276.61242890507 GPa
+print "Shear Modulus 1 = ${shearmodulus1} ${cunits}"
+Shear Modulus 1 = 180.591050581843 GPa
+print "Shear Modulus 2 = ${shearmodulus2} ${cunits}"
+Shear Modulus 2 = 90.5175755768355 GPa
+print "Poisson Ratio = ${poissonratio}"
+Poisson Ratio = 0.352473900092062
+
+print "Bulk Modulus (B) = ${B} ${cunits}"
+Bulk Modulus (B) = 276.61242890507 GPa
+print "Shear Modulus (Voigt) (G) = ${G} ${cunits}"
+Shear Modulus (Voigt) (G) = 144.56166057984 GPa
+print "Young Modulus (E) = ${E} ${cunits}"
+Young Modulus (E) = 369.343552284118 GPa
+print "Poisson Ratio (nu) = ${nu}"
+Poisson Ratio (nu) = 0.277460257452331
+Total wall time: 0:00:32
