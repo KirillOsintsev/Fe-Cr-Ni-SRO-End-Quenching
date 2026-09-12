@@ -6,7 +6,7 @@ This repository contains the source data, computational input files, and experim
 
 ---
 
-## 📌 Project Overview
+## Overview
 This study investigates how solid-state cooling rates (achieved via Jominy end-quenching) influence the formation of Chemical Short-Range Order (SRO) in single-phase FCC complex concentrated alloys (CCAs). By generating a continuous spectrum of cooling rates within a single specimen, we spatially decouple the SRO contribution to electron scattering and macroscopic yield strength from conventional microstructural defects (grain boundaries, vacancies, and dislocations).
 
 The repository provides all necessary data to reproduce the analytical modeling (NIMM), first-principles electronic structure calculations (MuST), atomistic simulations (LAMMPS), and experimental validations (electrical resistivity, micro-tensile tests, HRTEM, and XRD).
@@ -26,16 +26,14 @@ All input files, raw data, and processing scripts are organized as follows:
 Contains raw and processed experimental data organized by characterization method:
 *   **Thermocouples/**: Contains `Cooling_curves.xlsx` with time-temperature data from K-type thermocouples positioned at 2.5 mm (Bottom), 45 mm (Middle), and 75 mm (Top) from the quenched end.
 *   **XRD/**: Contains raw XRD patterns (`.txt`, `.xy`) and GSAS-II project files (`.gpx`) used for Rietveld refinement, organized by alloy and region (as-cast, top, middle, bottom).
-*   **TEM/**: Contains raw `.dm3` high-resolution TEM files for the Fe_{20}Ni_{50}Cr_{30} alloy (bottom and top regions) and the custom Python script (`average_fft_hrtem.py`) used to generate the averaged FFT patterns and reconstruct SRO domains via Inverse Fast Fourier Transform (IFFT).
-*   **Dislocation_Density/**: Contains TEM micrographs with overlaid grids used for the line-intercept method, along with the `.xlsx` files containing the quantitative defect density calculations.
+*   **TEM/**: Contains TEM files for the Fe20Ni50Cr30 alloy (bottom and top regions) used for dislocation density caluclations which are saved in
+the 'dislocation_density.xlsx' file.
 *   **Electrical_Resistivity/**: Four-point probe measurements for all three alloys across the thermal gradient.
-*   **Mechanical_Tests/**: Raw engineering stress-strain data from micro-tensile tests.
+*   **Mechanical_Tests/**: Raw engineering stress-strain data from micro-tensile tests as well as the calculated mechanical properties.
 
 ### `02_Analytical_NIMM/`
-Contains data and scripts for thermodynamic SRO predictions:
-*   **SRO_Parameters/**: Calculated Warren-Cowley parameters ($\alpha^1$) and fugacity values for the Fe-Ni-Cr compositional space at temperatures ranging from 400 K to 1200 K.
-*   **Yield_Strength_Model/**: Implementation of the solute-strengthening theory (based on Varvenne-Curtin models) to predict SRO and defect contributions to macroscopic yield strength.
-*   *For the standalone automated Python calculator used in this study, please visit:* [KirillOsintsev/SRO-parameters-calculator](https://github.com/KirillOsintsev/SRO-parameters-calculator)
+Contains data from thermodynamic SRO predictions using Non-interacting molecule method.
+*   For the standalone automated Python calculator used in this study, please visit:* [KirillOsintsev/SRO-parameters-calculator](https://github.com/KirillOsintsev/SRO-parameters-calculator)
 
 ### `03_Computational_MuST/`
 Contains input files and outputs for first-principles **Multiple Scattering Theory (MuST)** calculations to ensure full reproducibility:
@@ -47,30 +45,22 @@ Contains input files and outputs for first-principles **Multiple Scattering Theo
 ### `04_Media/`
 *   **End_Quench_Videos/**: Video documentation of the water-jet quenching process.
 
+### `05_Atomistic simulations/`
+*   **Misfit volume calculations/**: Input and output files for the misfit volumes calculations obtained by atomistic simulations using
+the Embedded-Atom-Method (EAM) and universal PET-MAD potentials.
 ---
 
-## ⚙️ Key Experimental & Computational Parameters
-
-| Parameter | Value / Description |
-| :--- | :--- |
-| **Homogenization** | 1223 K for 1 hour |
-| **Quenching Medium** | Water Jet (Jominy end-quench setup) |
-| **Cooling Rates** | ~132.8–239.0 K/s (Fast-cooled Bottom) to ~0.8–1.4 K/s (Slow-cooled Top) |
-| **Tensile Strain Rate** | $1 \times 10^{-3} \text{ s}^{-1}$ (Micro-tensile tests) |
-| **Atomistic Supercells** | 500 atoms, Special Quasi-random Structures (SQS) |
-
----
-
-## 💻 Software Requirements and Reproducibility
+## Software Requirements and Reproducibility
 
 To ensure compliance with computational reproducibility standards, the following software packages and versions were used in this study. Input files for these programs are provided in their respective directories.
 
 *   **MuST (Multiple Scattering Theory):** Ab initio electronic structure calculations and Kubo-Greenwood resistivity. [GitHub Repository](https://github.com/mstsuite/MuST).
 *   **LAMMPS:** Used for molecular dynamics energy minimization to extract equilibrium lattice parameters, elastic constants, and misfit volumes.
-*   **sqsgenerator:** Used to generate the SQS supercells for atomistic simulations.
-*   **pySSpredict:** Open-source Python toolkit used for baseline solid-solution yield strength predictions.
+*   **sqsgenerator:** Used to generate the SQS supercells for atomistic simulations. [sqsgenerator’s documentation](https://sqsgenerator.readthedocs.io/en/latest/)
+*   **pySSpredict:** Open-source Python toolkit used for baseline solid-solution yield strength predictions. [GitHub Repository](https://github.com/Dongsheng-Wen/pySSpredict)
 *   **GSAS-II:** Used for Rietveld refinement of the XRD patterns.
 *   **Data Analysis & Plotting:** Python 3.8+ (`numpy`, `pandas`, `scipy`, `matplotlib`).
+*   **ImageJ 1.53a:** Dislocation density calculations.
 
 ---
 
@@ -78,7 +68,7 @@ To ensure compliance with computational reproducibility standards, the following
 
 If you use the data, models, or scripts provided in this repository, please cite our manuscript:
 
-> Osintsev, K., Zhu, Y., Raghuraman, V., & Chen, X.-Z. (2026). *Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys*. (Under Review).
+> Osintsev, K., Zhu, Y., Raghuraman, V., & Chen, X. (2026). *Solid-state thermal gradients control chemical short-range order evolution in complex concentrated alloys*. (Under Review).
 
 ---
 
